@@ -4,104 +4,102 @@
       <div class="row">
         <div class="col-xl-3 col-md-6">
           <stats-card>
-            <div slot="header" class="icon-warning">
-              <i class="nc-icon nc-chart text-warning"></i>
-            </div>
-            <div slot="content">
-              <p class="card-category">Capacity</p>
-              <h4 class="card-title">105GB</h4>
-            </div>
-            <div slot="footer">
-              <i class="fa fa-refresh"></i>Updated now
-            </div>
+            <template #header>
+              <div class="icon-warning">
+                <i class="nc-icon nc-paper-2 text-warning"></i>
+              </div>
+            </template>
+            <template #content>
+              <p class="card-category">연간 답변 게시글</p>
+              <h4 class="card-title">125건</h4>
+            </template>
+            <template #footer> <i class="fa fa-refresh"></i> 실시간 업데이트 중 </template>
           </stats-card>
         </div>
 
         <div class="col-xl-3 col-md-6">
           <stats-card>
-            <div slot="header" class="icon-success">
-              <i class="nc-icon nc-light-3 text-success"></i>
-            </div>
-            <div slot="content">
-              <p class="card-category">Revenue</p>
-              <h4 class="card-title">$1,345</h4>
-            </div>
-            <div slot="footer">
-              <i class="fa fa-calendar-o"></i>Last day
-            </div>
+            <template #header>
+              <div class="icon-success">
+                <i class="nc-icon nc-time-alarm text-success"></i>
+              </div>
+            </template>
+            <template #content>
+              <p class="card-category">오늘의 상담 예약</p>
+              <h4 class="card-title">8건</h4>
+            </template>
+            <template #footer> <i class="fa fa-calendar-o"></i> 예약 관리 바로가기 </template>
           </stats-card>
         </div>
 
         <div class="col-xl-3 col-md-6">
           <stats-card>
-            <div slot="header" class="icon-danger">
-              <i class="nc-icon nc-vector text-danger"></i>
-            </div>
-            <div slot="content">
-              <p class="card-category">Errors</p>
-              <h4 class="card-title">23</h4>
-            </div>
-            <div slot="footer">
-              <i class="fa fa-clock-o"></i>Last day
-            </div>
+            <template #header>
+              <div class="icon-danger">
+                <i class="nc-icon nc-chat-round text-danger"></i>
+              </div>
+            </template>
+            <template #content>
+              <p class="card-category">미확인 채팅</p>
+              <h4 class="card-title">12</h4>
+            </template>
+            <template #footer> <i class="fa fa-clock-o"></i> 최근 1시간 기준 </template>
           </stats-card>
         </div>
 
         <div class="col-xl-3 col-md-6">
           <stats-card>
-            <div slot="header" class="icon-info">
-              <i class="nc-icon nc-favourite-28 text-primary"></i>
-            </div>
-            <div slot="content">
-              <p class="card-category">Followers</p>
-              <h4 class="card-title">+45</h4>
-            </div>
-            <div slot="footer">
-              <i class="fa fa-refresh"></i>Updated now
-            </div>
+            <template #header>
+              <div class="icon-info">
+                <i class="nc-icon nc-satisfied text-primary"></i>
+              </div>
+            </template>
+            <template #content>
+              <p class="card-category">만족도 평균</p>
+              <h4 class="card-title">248명</h4>
+            </template>
+            <template #footer> <i class="fa fa-refresh"></i> 전체 누적 데이터 </template>
           </stats-card>
         </div>
-
       </div>
+
       <div class="row">
         <div class="col-md-8">
-          <chart-card :chart-data="lineChart.data"
-                      :chart-options="lineChart.options"
-                      :responsive-options="lineChart.responsiveOptions">
-            <template slot="header">
-              <h4 class="card-title">Users Behavior</h4>
-              <p class="card-category">24 Hours performance</p>
+          <chart-card
+            :chart-data="lineChart.data"
+            :chart-options="lineChart.options"
+            :responsive-options="lineChart.responsiveOptions"
+          >
+            <template #header>
+              <h4 class="card-title">월별 상담 건수 (임혜빈)</h4>
+              <p class="card-category">2026년 월간 상담 추이</p>
             </template>
-            <template slot="footer">
+            <template #footer>
               <div class="legend">
-                <i class="fa fa-circle text-info"></i> Open
-                <i class="fa fa-circle text-danger"></i> Click
-                <i class="fa fa-circle text-warning"></i> Click Second Time
+                <i class="fa fa-circle text-info"></i> 민사
+                <i class="fa fa-circle text-danger"></i> 형사
+                <i class="fa fa-circle text-warning"></i> 가사
               </div>
-              <hr>
-              <div class="stats">
-                <i class="fa fa-history"></i> Updated 3 minutes ago
-              </div>
+              <hr />
+              <div class="stats"><i class="fa fa-history"></i> 3분 전 업데이트됨</div>
             </template>
           </chart-card>
         </div>
 
         <div class="col-md-4">
           <chart-card :chart-data="pieChart.data" chart-type="Pie">
-            <template slot="header">
-              <h4 class="card-title">Email Statistics</h4>
-              <p class="card-category">Last Campaign Performance</p>
+            <template #header>
+              <h4 class="card-title">상담 카테고리 비율 (한기현)</h4>
+              <p class="card-category">현재 진행 중인 사건 비율</p>
             </template>
-            <template slot="footer">
+            <template #footer>
               <div class="legend">
-                <i class="fa fa-circle text-info"></i> Open
-                <i class="fa fa-circle text-danger"></i> Bounce
-                <i class="fa fa-circle text-warning"></i> Unsubscribe
+                <i class="fa fa-circle text-info"></i> 민사
+                <i class="fa fa-circle text-danger"></i> 형사
+                <i class="fa fa-circle text-warning"></i> 기타
               </div>
-              <hr>
-              <div class="stats">
-                <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
-              </div>
+              <hr />
+              <div class="stats"><i class="fa fa-clock-o"></i> 실시간 분류 기준</div>
             </template>
           </chart-card>
         </div>
@@ -109,165 +107,97 @@
 
       <div class="row">
         <div class="col-md-6">
-          <chart-card
-            :chart-data="barChart.data"
-            :chart-options="barChart.options"
-            :chart-responsive-options="barChart.responsiveOptions"
-            chart-type="Bar">
-            <template slot="header">
-              <h4 class="card-title">2014 Sales</h4>
-              <p class="card-category">All products including Taxes</p>
+          <card>
+            <template #header>
+              <h4 class="card-title">채팅 리스트 관리 (한기현)</h4>
+              <p class="card-category">최근 의뢰인과의 메시지</p>
             </template>
-            <template slot="footer">
-              <div class="legend">
-                <i class="fa fa-circle text-info"></i> Tesla Model S
-                <i class="fa fa-circle text-danger"></i> BMW 5 Series
-              </div>
-              <hr>
-              <div class="stats">
-                <i class="fa fa-check"></i> Data information certified
-              </div>
-            </template>
-          </chart-card>
+            <l-table :data="chatListData" :columns="['Name', 'Message', '']">
+              <template #default="{ row }">
+                <td>{{ row.name }}</td>
+                <td>{{ row.message }}</td>
+                <td class="text-right">
+                  <button class="btn btn-info btn-fill btn-xs">채팅방 이동</button>
+                </td>
+              </template>
+            </l-table>
+          </card>
         </div>
 
         <div class="col-md-6">
           <card>
-            <template slot="header">
-              <h5 class="title">Tasks</h5>
-              <p class="category">Backend development</p>
+            <template #header>
+              <h5 class="title">상담 예약 캘린더 (최지원)</h5>
+              <p class="category">재판 및 상담 일정 관리 (+CRUD)</p>
             </template>
-            <l-table :data="tableData.data"
-                     :columns="tableData.columns">
-              <template slot="columns"></template>
-
-              <template slot-scope="{row}">
-                <td>
-                  <base-checkbox v-model="row.checked"></base-checkbox>
-                </td>
-                <td>{{row.title}}</td>
-                <td class="td-actions text-right">
-                  <button type="button" class="btn-simple btn btn-xs btn-info" v-tooltip.top-center="editTooltip">
-                    <i class="fa fa-edit"></i>
-                  </button>
-                  <button type="button" class="btn-simple btn btn-xs btn-danger" v-tooltip.top-center="deleteTooltip">
-                    <i class="fa fa-times"></i>
-                  </button>
-                </td>
-              </template>
-            </l-table>
-            <div class="footer">
-              <hr>
-              <div class="stats">
-                <i class="fa fa-history"></i> Updated 3 minutes ago
-              </div>
+            <div
+              class="calendar-placeholder"
+              style="
+                height: 300px;
+                background: #f9f9f9;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <p class="text-muted">Calendar Library Loading...</p>
             </div>
+            <template #footer>
+              <hr />
+              <div class="stats"><i class="fa fa-history"></i> 일정 관리 시스템 연동 완료</div>
+            </template>
           </card>
-
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
-  import ChartCard from 'src/components/Cards/ChartCard.vue'
-  import StatsCard from 'src/components/Cards/StatsCard.vue'
-  import LTable from 'src/components/Table.vue'
+import ChartCard from '../components/Cards/ChartCard.vue'
+import StatsCard from '../components/Cards/StatsCard.vue'
+import LTable from '../components/Table.vue'
+import Card from '../components/Cards/Card.vue'
 
-  export default {
-    components: {
-      LTable,
-      ChartCard,
-      StatsCard
-    },
-    data () {
-      return {
-        editTooltip: 'Edit Task',
-        deleteTooltip: 'Remove',
-        pieChart: {
-          data: {
-            labels: ['40%', '20%', '40%'],
-            series: [40, 20, 40]
-          }
+export default {
+  components: {
+    LTable,
+    ChartCard,
+    StatsCard,
+    Card,
+  },
+  data() {
+    return {
+      // 1. 임혜빈님: 월별 상담 건수 데이터 (샘플)
+      lineChart: {
+        data: {
+          labels: ['1월', '2월', '3월', '4월', '5월', '6월'],
+          series: [
+            [50, 80, 120, 90, 150, 200], // 민사
+            [30, 40, 60, 50, 70, 90], // 형사
+            [20, 30, 40, 35, 45, 60], // 가사
+          ],
         },
-        lineChart: {
-          data: {
-            labels: ['9:00AM', '12:00AM', '3:00PM', '6:00PM', '9:00PM', '12:00PM', '3:00AM', '6:00AM'],
-            series: [
-              [287, 385, 490, 492, 554, 586, 698, 695],
-              [67, 152, 143, 240, 287, 335, 435, 437],
-              [23, 113, 67, 108, 190, 239, 307, 308]
-            ]
-          },
-          options: {
-            low: 0,
-            high: 800,
-            showArea: false,
-            height: '245px',
-            axisX: {
-              showGrid: false
-            },
-            lineSmooth: true,
-            showLine: true,
-            showPoint: true,
-            fullWidth: true,
-            chartPadding: {
-              right: 50
-            }
-          },
-          responsiveOptions: [
-            ['screen and (max-width: 640px)', {
-              axisX: {
-                labelInterpolationFnc (value) {
-                  return value[0]
-                }
-              }
-            }]
-          ]
+        options: {
+          low: 0,
+          high: 250,
+          height: '245px',
         },
-        barChart: {
-          data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            series: [
-              [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-              [412, 243, 280, 580, 453, 353, 300, 364, 368, 410, 636, 695]
-            ]
-          },
-          options: {
-            seriesBarDistance: 10,
-            axisX: {
-              showGrid: false
-            },
-            height: '245px'
-          },
-          responsiveOptions: [
-            ['screen and (max-width: 640px)', {
-              seriesBarDistance: 5,
-              axisX: {
-                labelInterpolationFnc (value) {
-                  return value[0]
-                }
-              }
-            }]
-          ]
+      },
+      // 2. 한기현님: 상담 카테고리 비율 (샘플)
+      pieChart: {
+        data: {
+          labels: ['40%', '35%', '25%'],
+          series: [40, 35, 25],
         },
-        tableData: {
-          data: [
-            {title: 'Sign contract for "What are conference organizers afraid of?"', checked: false},
-            {title: 'Lines From Great Russian Literature? Or E-mails From My Boss?', checked: true},
-            {
-              title: 'Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit',
-              checked: true
-            },
-            {title: 'Create 4 Invisible User Experiences you Never Knew About', checked: false},
-            {title: 'Read "Following makes Medium better"', checked: false},
-            {title: 'Unfollow 5 enemies from twitter', checked: false}
-          ]
-        }
-      }
+      },
+      // 3. 한기현님: 채팅 리스트 데이터 (샘플)
+      chatListData: [
+        { name: '홍길동 의뢰인', message: '사건 관련 서류 보냈습니다.', date: '오전 10:30' },
+        { name: '이순신 의뢰인', message: '다음 재판 날짜 확인 부탁드려요.', date: '어제' },
+        { name: '강감찬 의뢰인', message: '상담 예약 취소 가능한가요?', date: '2026-03-05' },
+      ],
     }
-  }
+  },
+}
 </script>
-<style>
-
-</style>

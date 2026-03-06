@@ -1,48 +1,28 @@
 <template>
-  <component :is="tag"
-             @click.native="hideSidebar"
-             v-bind="$attrs"
-             tag="li">
-    <a class="nav-link" v-bind="$attrs">
-      <slot>
-        <i v-if="link.icon" :class="link.icon"></i>
-        <p>{{link.name}}</p>
-      </slot>
-    </a>
-  </component>
+  <router-link :to="to" v-slot="{ href, navigate, isActive }" custom>
+    <li :class="[isActive ? 'active' : '']" class="nav-item">
+      <a :href="href" @click="navigate" class="nav-link">
+        <slot>
+          <i v-if="link.icon" :class="link.icon"></i>
+          <p>{{ link.name }}</p>
+        </slot>
+      </a>
+    </li>
+  </router-link>
 </template>
+
 <script>
-  export default {
-    inheritAttrs: false,
-    inject: {
-      autoClose: {
-        default: true
-      }
+export default {
+  name: 'sidebar-link',
+  props: {
+    to: {
+      type: [String, Object],
+      default: '#',
     },
-    props: {
-      link: {
-        type: [String, Object],
-        default: () => {
-          return {
-            name: '',
-            path: '',
-            icon: ''
-          }
-        }
-      },
-      tag: {
-        type: String,
-        default: 'router-link'
-      }
+    link: {
+      type: Object,
+      default: () => ({ name: '', icon: '', path: '' }),
     },
-    methods: {
-      hideSidebar () {
-        if (this.autoClose && this.$sidebar && this.$sidebar.showSidebar === true) {
-          this.$sidebar.displaySidebar(false)
-        }
-      }
-    }
-  }
+  },
+}
 </script>
-<style>
-</style>

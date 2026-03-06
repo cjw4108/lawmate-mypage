@@ -1,72 +1,78 @@
 <template>
   <div class="notifications">
-    <transition-group :name="transitionName"
-                      :mode="transitionMode">
+    <transition-group :name="transitionName">
       <notification
         v-for="notification in notifications"
         v-bind="notification"
         :clickHandler="notification.onClick"
         :key="notification.timestamp.getTime()"
-        @close="removeNotification">
+        @close="removeNotification"
+      >
       </notification>
     </transition-group>
   </div>
 </template>
 <script>
-import Notification from './Notification.vue';
+import Notification from './Notification.vue'
 
 export default {
   components: {
-    Notification
+    Notification,
   },
   props: {
     transitionName: {
       type: String,
-      default: 'list'
+      default: 'list',
     },
     transitionMode: {
       type: String,
-      default: 'in-out'
+      default: 'in-out',
     },
     overlap: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      notifications: this.$notifications.state
-    };
+      notifications: this.$notifications.state,
+    }
   },
   methods: {
     removeNotification(timestamp) {
-      this.$notifications.removeNotification(timestamp);
-    }
+      this.$notifications.removeNotification(timestamp)
+    },
   },
   created() {
-    this.$notifications.settings.overlap = this.overlap;
+    this.$notifications.settings.overlap = this.overlap
   },
   watch: {
-    overlap: function(newVal) {
-      this.$notifications.settings.overlap = newVal;
-    }
-  }
-};
+    overlap: function (newVal) {
+      this.$notifications.settings.overlap = newVal
+    },
+  },
+}
 </script>
 <style lang="scss">
 .notifications {
   .list-move {
-    transition: transform 0.3s, opacity 0.4s;
+    transition:
+      transform 0.3s,
+      opacity 0.4s;
   }
   .list-item {
     display: inline-block;
     margin-right: 10px;
   }
   .list-enter-active {
-    transition: transform 0.2s ease-in, opacity 0.4s ease-in;
+    transition:
+      transform 0.2s ease-in,
+      opacity 0.4s ease-in;
   }
   .list-leave-active {
-    transition: transform 1s ease-out, opacity 0.4s ease-out;
+    transition:
+      transform 1s ease-out,
+      opacity 0.4s ease-out;
   }
 
   .list-enter {
