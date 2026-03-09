@@ -7,15 +7,8 @@
 
     <form>
       <div class="row">
-        <div class="col-md-5">
-          <base-input
-            type="text"
-            label="소속 (기관/법인)"
-            :disabled="true"
-            placeholder="LawMate"
-            v-model="user.organization"
-          >
-          </base-input>
+        <div v-if="currentUser?.role === 'ROLE_LAWYER'" class="col-md-5">
+          <base-input label="소속" v-model="user.organization" :disabled="true"> </base-input>
         </div>
         <div class="col-md-3">
           <base-input type="text" label="아이디" placeholder="Username" v-model="user.username">
@@ -108,14 +101,21 @@
 </template>
 
 <script setup>
-/**
- * [Vue 3 수술 내역]
- * 1. script setup 적용: 코드가 훨씬 직관적으로 변합니다.
- * 2. ref 사용: 데이터 반응성을 확보합니다.
- * 3. 경로 수정: @/ 기호를 사용하여 정확히 참조합니다.
- */
-import { ref } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import Card from '@/components/Cards/Card.vue'
+
+const currentUser = reactive({
+  role: '',
+  userId: '',
+  name: '',
+})
+
+onMounted(() => {
+  if (window.LAW_MATE_USER) {
+    Object.assign(currentUser, window.LAW_MATE_USER)
+    console.log('Vue 반응성 객체에 로드된 권한:', currentUser.role)
+  }
+})
 
 // 나중에 Spring API 연결 시 이 객체에 데이터를 담아 보내면 됩니다.
 const user = ref({
