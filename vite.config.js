@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue' // 아까 에러 났던 부분 수정 완료!
+import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
 export default defineConfig({
@@ -12,13 +12,17 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        // [핵심] Sass의 모든 잔소리(Deprecation)를 조용하게 만듭니다.
-        silenceDeprecations: [
-          'import',
-          'color-functions',
-          'global-builtin',
-          'slash-div', // 지금 뜨고 있는 슬래시(/) 경고 차단!
-        ],
+        silenceDeprecations: ['import', 'color-functions', 'global-builtin', 'slash-div'],
+      },
+    },
+  },
+  build: {
+    outDir: path.resolve(__dirname, '../IdeaProjects/LawMate/src/main/resources/static/js/vue-app'),
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: 'main.js',
+        assetFileNames: '[name].[ext]',
       },
     },
   },
