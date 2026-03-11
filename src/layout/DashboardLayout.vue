@@ -10,7 +10,7 @@
           <i class="nc-icon nc-chat-round"></i>
           <p>상담 승인 대기</p>
         </sidebar-link>
-        <sidebar-link to="/admin/schedule">
+        <sidebar-link to="/schedule">
           <i class="nc-icon nc-watch-time"></i>
           <p>일정 관리</p>
         </sidebar-link>

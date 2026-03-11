@@ -10,6 +10,7 @@ import TableList from '../pages/TableList.vue'
 import Typography from '../pages/Typography.vue'
 import Icons from '../pages/Icons.vue'
 import Notifications from '../pages/Notifications.vue'
+import Schedule from '@/pages/Schedule.vue'
 
 const routes = [
   {
@@ -30,7 +31,7 @@ const routes = [
       {
         path: 'schedule',
         name: 'Schedule',
-        component: Typography, // 상담 및 재판 일정 (임시)
+        component: Schedule,
       },
       {
         path: 'documents',
