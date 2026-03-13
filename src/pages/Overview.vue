@@ -193,7 +193,7 @@ export default {
       },
       // 3. 한기현님: 채팅 리스트 데이터 (샘플)
       chatListData: [
-        { name: '홍길동 님', message: '사건 관련 서류 보냈습니다.', date: '오전 10:30' },
+        { name: '홍길동 님님', message: '사건 관련 서류 보냈습니다.', date: '오전 10:30' },
         { name: '이순신 님', message: '다음 재판 날짜 확인 부탁드려요.', date: '어제' },
         { name: '강감찬 님', message: '상담 예약 취소 가능한가요?', date: '2026-03-05' },
       ],
