@@ -109,18 +109,49 @@
         <div class="col-md-6">
           <card>
             <template #header>
-              <h4 class="card-title">채팅 리스트 관리 (한기현)</h4>
-              <p class="card-category">최근 의뢰인과의 메시지</p>
+              <h4 class="card-title">실시간 상담 요청 관리</h4>
+              <p class="card-category">상담 목록을 확인하세요.</p>
             </template>
-            <l-table :data="chatListData" :columns="['Name', 'Message', '']">
-              <template #default="{ row }">
-                <td>{{ row.name }}</td>
-                <td>{{ row.message }}</td>
-                <td class="text-right">
-                  <button class="btn btn-info btn-fill btn-xs">채팅방 이동</button>
-                </td>
-              </template>
-            </l-table>
+
+            <div class="table-responsive">
+              <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                  <th>의뢰인</th>
+                  <th>최근 메시지</th>
+                  <th class="text-right">상태</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-if="chatListData.length === 0">
+                  <td colspan="3" class="text-center text-muted" style="padding: 20px;">
+                    현재 진행 중인 상담이 없습니다.
+                  </td>
+                </tr>
+
+                <tr v-for="row in chatListData" :key="row.roomId">
+                  <td>{{ row.userName }} 님</td>
+                  <td class="text-truncate" style="max-width: 200px;">{{ row.lastMessage }}</td>
+                  <td class="text-right">
+                    <button
+                      v-if="row.status === 'LIVE'"
+                      @click="acceptConsultation(row.roomId)"
+                      class="btn btn-success btn-fill btn-xs"
+                    >
+                      상담 수락
+                    </button>
+                    <button
+                      v-else
+                      @click="goToChat(row.roomId)"
+                      class="btn btn-info btn-fill btn-xs"
+                    >
+                      채팅방 이동
+                    </button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
           </card>
         </div>
 
@@ -158,6 +189,7 @@ import ChartCard from '../components/Cards/ChartCard.vue'
 import StatsCard from '../components/Cards/StatsCard.vue'
 import LTable from '../components/Table.vue'
 import Card from '../components/Cards/Card.vue'
+import axios from 'axios';
 
 export default {
   components: {
@@ -168,7 +200,6 @@ export default {
   },
   data() {
     return {
-      // 1. 임혜빈님: 월별 상담 건수 데이터 (샘플)
       lineChart: {
         data: {
           labels: ['1월', '2월', '3월', '4월', '5월', '6월'],
@@ -184,20 +215,57 @@ export default {
           height: '245px',
         },
       },
-      // 2. 한기현님: 상담 카테고리 비율 (샘플)
       pieChart: {
         data: {
           labels: ['40%', '35%', '25%'],
           series: [40, 35, 25],
         },
       },
-      // 3. 한기현님: 채팅 리스트 데이터 (샘플)
-      chatListData: [
-        { name: '홍길동 님님', message: '사건 관련 서류 보냈습니다.', date: '오전 10:30' },
-        { name: '이순신 님', message: '다음 재판 날짜 확인 부탁드려요.', date: '어제' },
-        { name: '강감찬 님', message: '상담 예약 취소 가능한가요?', date: '2026-03-05' },
-      ],
+      chatListData: [],
+    } // data return 닫기
+  }, // data 함수 닫기 (쉼표 확인)
+
+  methods: {
+    async fetchChatList() {
+      try {
+        const response = await axios.get('/api/chat/list');
+        // 서버 응답이 배열인지 확인 후 대입
+        if (Array.isArray(response.data)) {
+          this.chatListData = response.data;
+        } else {
+          this.chatListData = [];
+        }
+      } catch (error) {
+        console.error("목록 로드 중 에러:", error);
+        this.chatListData = []; // 에러 시 빈 배열로 초기화
+      }
+    },
+
+    // 2. 상담 수락 처리
+    async acceptConsultation(roomId) {
+      if (confirm("이 상담을 수락하시겠습니까?")) {
+        try {
+          const response = await axios.post(`/direct/accept?roomId=${roomId}`);
+          if (response.data === 'success') {
+            alert("상담이 수락되었습니다.");
+            this.fetchChatList(); // 목록 새로고침
+          }
+        } catch (error) {
+          alert("수락 중 오류가 발생했습니다.");
+        }
+      }
+    },
+
+    // 3. 채팅방 이동
+    goToChat(roomId) {
+      window.location.href = `http://localhost:8080/direct/consult?roomId=${roomId}`;
     }
-  },
-}
+  }, // methods 닫기 (쉼표 확인)
+
+  mounted() {
+    // 페이지 로드 시 딱 한 번만 호출하도록 설정
+    this.fetchChatList();
+
+  } // mounted 닫기
+} // export default 닫기
 </script>
