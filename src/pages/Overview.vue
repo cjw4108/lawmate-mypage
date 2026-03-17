@@ -153,6 +153,14 @@
                       입장하기
                     </button>
 
+                    <button
+                      v-if="row.status === 'ONGOING'"
+                      @click="closeConsultation(row.roomId, row.lawyerId)"
+                      class="btn btn-danger btn-fill btn-sm"
+                    >
+                      상담 종료
+                    </button>
+
                     <span v-else class="badge badge-default">종료됨</span>
                   </td>
                 </tr>
@@ -275,6 +283,19 @@ export default {
       }
       // URL 파라미터로 이동
       location.href = `/direct/consult?lawyerId=${row.lawyerId}&roomId=${row.roomId}`
+    },
+
+    async closeConsultation(roomId, lawyerId) {
+      if (!confirm('상담을 종료하시겠습니까? 변호사님 상태가 ACTIVE로 변경됩니다.')) return;
+      try {
+        const response = await axios.post(`/direct/close?roomId=${roomId}&lawyerId=${lawyerId}`);
+        if (response.data === 'success') {
+          alert('상담이 종료되었습니다.');
+          this.fetchChatList(); // 리스트 새로고침
+        }
+      } catch (error) {
+        console.error('종료 실패:', error);
+      }
     }
   } // methods 끝
 }
