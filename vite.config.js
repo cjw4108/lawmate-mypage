@@ -1,23 +1,39 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import path from 'path'
+import { fileURLToPath } from 'node:url'
+import path from 'node:path'
+import fs from 'node:fs'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+function getTargetPath() {
+  const candidates = [
+    path.resolve(__dirname, '../../LawMate/src/main/resources/static/js/vue-app'),
+    path.resolve(__dirname, '../IdeaProjects/LawMate/src/main/resources/static/js/vue-app'),
+    path.resolve(__dirname, '../LawMate/src/main/resources/static/js/vue-app'),
+    path.resolve(__dirname, '../src/main/resources/static/js/vue-app'),
+  ]
+
+  for (const p of candidates) {
+    if (fs.existsSync(path.dirname(p))) return p
+  }
+
+  return candidates[2]
+}
+
+const targetPath = getTargetPath()
+console.log('🚀 현재 감지된 빌드 경로:', targetPath)
 
 export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        silenceDeprecations: ['import', 'color-functions', 'global-builtin', 'slash-div'],
-      },
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   build: {
-    outDir: path.resolve(__dirname, '../IdeaProjects/LawMate/src/main/resources/static/js/vue-app'),
+    outDir: targetPath,
     emptyOutDir: true,
     rollupOptions: {
       output: {

@@ -1,5 +1,6 @@
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
+import axios from 'axios'
 import { ScheduleXCalendar } from '@schedule-x/vue'
 import {
   createCalendar,
@@ -11,6 +12,8 @@ import {
 import { createEventsServicePlugin } from '@schedule-x/events-service'
 import '@schedule-x/theme-default/dist/index.css'
 import 'temporal-polyfill/global'
+
+axios.defaults.withCredentials = true
 
 const isModalOpen = ref(false)
 const eventsService = createEventsServicePlugin()
@@ -26,15 +29,24 @@ const scheduleData = reactive({
   all_day: false,
 })
 
-watch(() => scheduleData.all_day, (val) => {
-  if (val) {
-    scheduleData.start = scheduleData.start.split('T')[0]
-    scheduleData.end = scheduleData.end.split('T')[0]
-  } else {
-    scheduleData.start = `${scheduleData.start}T09:00`
-    scheduleData.end = `${scheduleData.end}T10:00`
-  }
-})
+// "2025-07-01T09:00" or "2025-07-01 09:00" → "2025-07-01 09:00" (Schedule-X 포맷)
+const formatForCalendar = (dateStr) => {
+  if (!dateStr) return ''
+  return dateStr.replace('T', ' ')
+}
+
+watch(
+  () => scheduleData.all_day,
+  (val) => {
+    if (val) {
+      scheduleData.start = scheduleData.start.split('T')[0]
+      scheduleData.end = scheduleData.end.split('T')[0]
+    } else {
+      scheduleData.start = `${scheduleData.start}T09:00`
+      scheduleData.end = `${scheduleData.end}T10:00`
+    }
+  },
+)
 
 const calendarApp = createCalendar({
   views: [createViewDay(), createViewWeek(), createViewMonthGrid(), createViewMonthAgenda()],
@@ -57,21 +69,44 @@ const calendarApp = createCalendar({
   },
 })
 
-const handleSave = async (payload) => {
+// 페이지 로드 시 기존 일정 불러오기
+onMounted(async () => {
+  try {
+    const res = await axios.get('http://localhost:8080/api/schedule')
+    res.data.forEach((ev) => {
+      eventsService.add({
+        id: ev.scheduleId,
+        title: ev.title,
+        start: formatForCalendar(ev.startTime),
+        end: formatForCalendar(ev.endTime),
+        calendarId: 'default',
+      })
+    })
+  } catch (error) {
+    console.error('일정 불러오기 실패:', error)
+  }
+})
+
+const handleSave = async () => {
   try {
     const body = {
-      ...payload,
-      all_day: scheduleData.all_day ? 'Y' : 'N',
+      title: scheduleData.title,
+      content: scheduleData.content,
+      clientName: scheduleData.client_name,
+      status: scheduleData.status,
       color: scheduleData.color,
+      allDay: scheduleData.all_day ? 'Y' : 'N',
+      startTime: scheduleData.start,
+      endTime: scheduleData.end,
     }
-    console.log('저장될 데이터:', body)
-    // await axios.post('/api/schedule', body)
+
+    const res = await axios.post('http://localhost:8080/api/schedule', body)
 
     eventsService.add({
-      id: Date.now(),
+      id: res.data.scheduleId,
       title: scheduleData.title,
-      start: scheduleData.start,
-      end: scheduleData.end,
+      start: formatForCalendar(scheduleData.start),
+      end: formatForCalendar(scheduleData.end),
       calendarId: 'default',
     })
 
@@ -79,6 +114,7 @@ const handleSave = async (payload) => {
     isModalOpen.value = false
   } catch (error) {
     console.error('저장 실패:', error)
+    alert('저장에 실패했습니다.')
   }
 }
 </script>
@@ -89,7 +125,6 @@ const handleSave = async (payload) => {
 
     <div v-if="isModalOpen" class="modal-overlay" @click.self="isModalOpen = false">
       <div class="modal-content">
-
         <div class="modal-header">
           <div class="header-left">
             <span class="color-dot" :style="{ background: scheduleData.color }"></span>
@@ -99,7 +134,6 @@ const handleSave = async (payload) => {
         </div>
 
         <FormKit type="form" submit-label="일정 저장" @submit="handleSave">
-
           <!-- 제목 -->
           <FormKit
             type="text"
@@ -110,7 +144,6 @@ const handleSave = async (payload) => {
             placeholder="일정 제목을 입력하세요"
           />
 
-          <!-- 의뢰인 + 상태 -->
           <div class="two-col-row">
             <FormKit
               type="text"
@@ -118,17 +151,6 @@ const handleSave = async (payload) => {
               label="의뢰인"
               v-model="scheduleData.client_name"
               placeholder="의뢰인 이름 (선택)"
-            />
-            <FormKit
-              type="select"
-              name="status"
-              label="상태"
-              v-model="scheduleData.status"
-              :options="[
-                { label: '대기', value: '대기' },
-                { label: '확정', value: '확정' },
-                { label: '취소', value: '취소' },
-              ]"
             />
           </div>
 
@@ -162,11 +184,7 @@ const handleSave = async (payload) => {
           <div class="color-picker-wrap">
             <label class="color-label">색상</label>
             <div class="color-input-row">
-              <input
-                type="color"
-                v-model="scheduleData.color"
-                class="color-palette"
-              />
+              <input type="color" v-model="scheduleData.color" class="color-palette" />
               <span class="color-value">{{ scheduleData.color }}</span>
             </div>
           </div>
@@ -180,7 +198,6 @@ const handleSave = async (payload) => {
             placeholder="추가적인 메모를 입력하세요"
             :rows="3"
           />
-
         </FormKit>
       </div>
     </div>
@@ -333,7 +350,7 @@ const handleSave = async (payload) => {
 }
 
 :deep(.formkit-submit) {
-  background: #4F46E5;
+  background: #4f46e5;
   color: white;
   border: none;
   padding: 0.6rem 1.5rem;
