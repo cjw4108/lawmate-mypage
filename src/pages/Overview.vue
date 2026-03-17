@@ -240,6 +240,10 @@ export default {
         this.chatListData = []; // 에러 시 빈 배열로 초기화
       }
     },
+    applyConsultation(lawyerId) {
+      // 클릭한 변호사의 ID를 쿼리 스트링으로 들고 이동합니다.
+      window.location.href = `http://localhost:8080/direct/consult?lawyerId=${lawyerId}`;
+    },
 
     // 2. 상담 수락 처리
     async acceptConsultation(roomId) {
@@ -261,7 +265,10 @@ export default {
       window.location.href = `http://localhost:8080/direct/consult?roomId=${roomId}`;
     }
   }, // methods 닫기 (쉼표 확인)
-
+  goToChatRoom(row) {
+    // 컨트롤러 주소(/direct/consult)에 맞게 roomId와 lawyerId를 전달
+    location.href = `/direct/consult?roomId=${row.roomId}&lawyerId=${row.lawyerId}`;
+  },
   mounted() {
     // 페이지 로드 시 딱 한 번만 호출하도록 설정
     this.fetchChatList();
