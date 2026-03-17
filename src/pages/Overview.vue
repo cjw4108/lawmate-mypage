@@ -134,17 +134,18 @@
                     <td class="text-truncate" style="max-width: 200px">{{ row.lastMessage }}</td>
                     <td class="text-right">
                       <button
-                        v-if="row.status === 'LIVE'"
-                        @click="acceptConsultation(row.roomId)"
-                        class="btn btn-success btn-fill btn-xs"
+                        v-if="lawyer.isConsulting"
+                        class="btn btn-secondary disabled"
+                        disabled
                       >
-                        상담 수락
+                        상담 중
                       </button>
                       <button
                         v-else
-                        @click="goToChat(row)"  class="btn btn-info btn-fill btn-xs"
+                        @click="applyConsultation(lawyer.lawyerNo)"
+                        class="btn btn-primary"
                       >
-                        채팅방 이동
+                        상담 신청
                       </button>
                     </td>
                   </tr>
