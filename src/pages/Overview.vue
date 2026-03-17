@@ -116,39 +116,38 @@
             <div class="table-responsive">
               <table class="table table-hover table-striped">
                 <thead>
-                <tr>
-                  <th>의뢰인</th>
-                  <th>최근 메시지</th>
-                  <th class="text-right">상태</th>
-                </tr>
+                  <tr>
+                    <th>의뢰인</th>
+                    <th>최근 메시지</th>
+                    <th class="text-right">상태</th>
+                  </tr>
                 </thead>
                 <tbody>
-                <tr v-if="chatListData.length === 0">
-                  <td colspan="3" class="text-center text-muted" style="padding: 20px;">
-                    현재 진행 중인 상담이 없습니다.
-                  </td>
-                </tr>
+                  <tr v-if="chatListData.length === 0">
+                    <td colspan="3" class="text-center text-muted" style="padding: 20px">
+                      현재 진행 중인 상담이 없습니다.
+                    </td>
+                  </tr>
 
-                <tr v-for="row in chatListData" :key="row.roomId">
-                  <td>{{ row.userName }} 님</td>
-                  <td class="text-truncate" style="max-width: 200px;">{{ row.lastMessage }}</td>
-                  <td class="text-right">
-                    <button
-                      v-if="row.status === 'LIVE'"
-                      @click="acceptConsultation(row.roomId)"
-                      class="btn btn-success btn-fill btn-xs"
-                    >
-                      상담 수락
-                    </button>
-                    <button
-                      v-else
-                      @click="goToChat(row.roomId)"
-                      class="btn btn-info btn-fill btn-xs"
-                    >
-                      채팅방 이동
-                    </button>
-                  </td>
-                </tr>
+                  <tr v-for="row in chatListData" :key="row.roomId">
+                    <td>{{ row.userName }} 님</td>
+                    <td class="text-truncate" style="max-width: 200px">{{ row.lastMessage }}</td>
+                    <td class="text-right">
+                      <button
+                        v-if="row.status === 'LIVE'"
+                        @click="acceptConsultation(row.roomId)"
+                        class="btn btn-success btn-fill btn-xs"
+                      >
+                        상담 수락
+                      </button>
+                      <button
+                        v-else
+                        @click="goToChat(row)"  class="btn btn-info btn-fill btn-xs"
+                      >
+                        채팅방 이동
+                      </button>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -189,7 +188,7 @@ import ChartCard from '../components/Cards/ChartCard.vue'
 import StatsCard from '../components/Cards/StatsCard.vue'
 import LTable from '../components/Table.vue'
 import Card from '../components/Cards/Card.vue'
-import axios from 'axios';
+import axios from 'axios'
 
 export default {
   components: {
@@ -204,9 +203,9 @@ export default {
         data: {
           labels: ['1월', '2월', '3월', '4월', '5월', '6월'],
           series: [
-            [50, 80, 120, 90, 150, 200], // 민사
-            [30, 40, 60, 50, 70, 90], // 형사
-            [20, 30, 40, 35, 45, 60], // 가사
+            [50, 80, 120, 90, 150, 200],
+            [30, 40, 60, 50, 70, 90],
+            [20, 30, 40, 35, 45, 60],
           ],
         },
         options: {
@@ -222,57 +221,53 @@ export default {
         },
       },
       chatListData: [],
-    } // data return 닫기
-  }, // data 함수 닫기 (쉼표 확인)
+    }
+  },
+
+  // ✅ mounted는 methods 밖에 있어야 정상 작동합니다.
+  mounted() {
+    this.fetchChatList()
+  },
 
   methods: {
+    // 1. 목록 가져오기
     async fetchChatList() {
       try {
-        const response = await axios.get('/api/chat/list');
-        // 서버 응답이 배열인지 확인 후 대입
+        const response = await axios.get('/api/chat/list')
+        console.log('대시보드 목록 데이터:', response.data)
         if (Array.isArray(response.data)) {
-          this.chatListData = response.data;
-        } else {
-          this.chatListData = [];
+          this.chatListData = response.data
         }
       } catch (error) {
-        console.error("목록 로드 중 에러:", error);
-        this.chatListData = []; // 에러 시 빈 배열로 초기화
+        console.error('목록 로드 중 에러:', error)
       }
     },
-    applyConsultation(lawyerId) {
-      // 클릭한 변호사의 ID를 쿼리 스트링으로 들고 이동합니다.
-      window.location.href = `http://localhost:8080/direct/consult?lawyerId=${lawyerId}`;
-    },
 
-    // 2. 상담 수락 처리
+    // 2. 상담 수락 (하나로 통합)
     async acceptConsultation(roomId) {
-      if (confirm("이 상담을 수락하시겠습니까?")) {
-        try {
-          const response = await axios.post(`/direct/accept?roomId=${roomId}`);
-          if (response.data === 'success') {
-            alert("상담이 수락되었습니다.");
-            this.fetchChatList(); // 목록 새로고침
-          }
-        } catch (error) {
-          alert("수락 중 오류가 발생했습니다.");
+      if (!confirm('이 상담을 수락하시겠습니까?')) return;
+
+      try {
+        // 컨트롤러의 @PostMapping("/direct/accept") 주소에 맞춤
+        const response = await axios.post(`/direct/accept?roomId=${roomId}`)
+        if (response.data === 'success') {
+          alert('상담이 수락되었습니다.')
+          this.fetchChatList() // 수락 후 목록 갱신
         }
+      } catch (error) {
+        console.error('수락 실패:', error)
+        alert('수락 처리 중 오류가 발생했습니다.')
       }
     },
 
     // 3. 채팅방 이동
-    goToChat(roomId) {
-      window.location.href = `http://localhost:8080/direct/consult?roomId=${roomId}`;
+    goToChat(row) {
+      if (!row.roomId || !row.lawyerId) {
+        alert('방 정보를 찾을 수 없습니다.')
+        return
+      }
+      location.href = `/direct/consult?lawyerId=${row.lawyerId}&roomId=${row.roomId}`
     }
-  }, // methods 닫기 (쉼표 확인)
-  goToChatRoom(row) {
-    // 컨트롤러 주소(/direct/consult)에 맞게 roomId와 lawyerId를 전달
-    location.href = `/direct/consult?roomId=${row.roomId}&lawyerId=${row.lawyerId}`;
-  },
-  mounted() {
-    // 페이지 로드 시 딱 한 번만 호출하도록 설정
-    this.fetchChatList();
-
-  } // mounted 닫기
-} // export default 닫기
+  } // methods 끝
+}
 </script>
