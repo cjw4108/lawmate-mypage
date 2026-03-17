@@ -123,32 +123,39 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-if="chatListData.length === 0">
-                    <td colspan="3" class="text-center text-muted" style="padding: 20px">
-                      현재 진행 중인 상담이 없습니다.
-                    </td>
-                  </tr>
+                <tr v-if="chatListData.length === 0">
+                  <td colspan="3" class="text-center text-muted" style="padding: 20px">
+                    현재 진행 중인 상담 요청이 없습니다.
+                  </td>
+                </tr>
 
-                  <tr v-for="row in chatListData" :key="row.roomId">
-                    <td>{{ row.userName }} 님</td>
-                    <td class="text-truncate" style="max-width: 200px">{{ row.lastMessage }}</td>
-                    <td class="text-right">
-                      <button
-                        v-if="lawyer.isConsulting"
-                        class="btn btn-secondary disabled"
-                        disabled
-                      >
-                        상담 중
-                      </button>
-                      <button
-                        v-else
-                        @click="applyConsultation(lawyer.lawyerNo)"
-                        class="btn btn-primary"
-                      >
-                        상담 신청
-                      </button>
-                    </td>
-                  </tr>
+                <tr v-for="row in chatListData" :key="row.roomId">
+                  <td><strong>{{ row.userName }}</strong> 님</td>
+
+                  <td class="text-truncate" style="max-width: 200px">
+                    {{ row.lastMessage || '새로운 상담 요청입니다.' }}
+                  </td>
+
+                  <td class="text-right">
+                    <button
+                      v-if="row.status === 'LIVE'"
+                      @click="acceptConsultation(row.roomId)"
+                      class="btn btn-primary btn-fill btn-sm"
+                    >
+                      수락하기
+                    </button>
+
+                    <button
+                      v-else-if="row.status === 'ONGOING'"
+                      @click="goToChat(row)"
+                      class="btn btn-success btn-fill btn-sm"
+                    >
+                      입장하기
+                    </button>
+
+                    <span v-else class="badge badge-default">종료됨</span>
+                  </td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -236,24 +243,23 @@ export default {
       try {
         const response = await axios.get('/api/chat/list')
         console.log('대시보드 목록 데이터:', response.data)
-        if (Array.isArray(response.data)) {
-          this.chatListData = response.data
-        }
+        // 서버에서 오는 데이터가 [{roomId: '...', userName: '...'}] 형태인지 확인
+        this.chatListData = response.data
       } catch (error) {
         console.error('목록 로드 중 에러:', error)
       }
     },
 
-    // 2. 상담 수락 (하나로 통합)
+    // 2. 상담 수락
     async acceptConsultation(roomId) {
       if (!confirm('이 상담을 수락하시겠습니까?')) return;
 
       try {
-        // 컨트롤러의 @PostMapping("/direct/accept") 주소에 맞춤
+        // 컨트롤러 주소와 파라미터 확인
         const response = await axios.post(`/direct/accept?roomId=${roomId}`)
-        if (response.data === 'success') {
+        if (response.data === 'success' || response.status === 200) {
           alert('상담이 수락되었습니다.')
-          this.fetchChatList() // 수락 후 목록 갱신
+          this.fetchChatList() // 목록 새로고침
         }
       } catch (error) {
         console.error('수락 실패:', error)
@@ -261,12 +267,13 @@ export default {
       }
     },
 
-    // 3. 채팅방 이동
+    // 3. 채팅방 이동 (입장하기 버튼 전용)
     goToChat(row) {
       if (!row.roomId || !row.lawyerId) {
         alert('방 정보를 찾을 수 없습니다.')
         return
       }
+      // URL 파라미터로 이동
       location.href = `/direct/consult?lawyerId=${row.lawyerId}&roomId=${row.roomId}`
     }
   } // methods 끝
