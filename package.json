@@ -18,6 +18,8 @@
     "@fullcalendar/core": "^6.1.20",
     "@fullcalendar/daygrid": "^6.1.20",
     "@fullcalendar/interaction": "^6.1.20",
+    "@fullcalendar/list": "^6.1.20",
+    "@fullcalendar/timegrid": "^6.1.20",
     "@fullcalendar/vue3": "^6.1.20",
     "@preact/signals": "^2.8.2",
     "@schedule-x/calendar": "^4.3.1",
