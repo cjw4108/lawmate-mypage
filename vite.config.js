@@ -26,6 +26,7 @@ const targetPath = getTargetPath()
 console.log('🚀 현재 감지된 빌드 경로:', targetPath)
 
 export default defineConfig({
+  base: '/js/vue-app/',
   plugins: [vue()],
   resolve: {
     alias: {

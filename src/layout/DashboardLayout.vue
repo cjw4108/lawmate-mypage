@@ -6,10 +6,6 @@
           <i class="nc-icon nc-badge"></i>
           <p>고객 관리 대시보드</p>
         </sidebar-link>
-        <sidebar-link to="/history">
-          <i class="nc-icon nc-chat-round"></i>
-          <p>상담 승인 대기</p>
-        </sidebar-link>
         <sidebar-link to="/schedule">
           <i class="nc-icon nc-watch-time"></i>
           <p>일정 관리</p>
@@ -19,14 +15,6 @@
       <sidebar-link to="/mypage">
         <i class="nc-icon nc-circle-09"></i>
         <p>내 정보 관리</p>
-      </sidebar-link>
-      <sidebar-link to="/documents">
-        <i class="nc-icon nc-notes"></i>
-        <p>내 서류함</p>
-      </sidebar-link>
-      <sidebar-link to="/notifications">
-        <i class="nc-icon nc-bell-55"></i>
-        <p>고객 센터</p>
       </sidebar-link>
     </side-bar>
 
