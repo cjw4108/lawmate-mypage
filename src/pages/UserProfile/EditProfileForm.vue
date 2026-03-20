@@ -4,8 +4,8 @@
 
       <!-- 카드 헤더 -->
       <div class="card-header-block">
-        <h2 class="page-title">내 정보 관리</h2>
-        <p class="page-desc">회원 정보를 확인하고 수정하세요</p>
+        <h2 class="profile-title">내 정보 관리</h2>
+        <p class="profile-desc">회원 정보를 확인하고 수정하세요</p>
       </div>
 
       <div class="section-divider"></div>
@@ -180,7 +180,7 @@ const updateProfile = async () => {
   border-bottom: none;
 }
 
-.page-title {
+.profile-title {
   font-size: 1.2rem;
   font-weight: 700;
   color: #111827;
@@ -188,7 +188,7 @@ const updateProfile = async () => {
   letter-spacing: -0.4px;
 }
 
-.page-desc {
+.profile-desc {
   font-size: 0.83rem;
   color: #9ca3af;
   margin: 0;
