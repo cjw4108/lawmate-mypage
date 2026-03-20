@@ -33,6 +33,24 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  // 🚀 아래 server 설정을 추가하세요!
+  server: {
+    proxy: {
+      // 1. 일반 API 요청 프록시
+      '/api': {
+        target: 'https://cityless-lapsible-marianna.ngrok-free.dev',
+        changeOrigin: true,
+        secure: false, // ngrok의 https를 허용하기 위해 false
+      },
+      // 2. 웹소켓(SockJS) 요청 프록시 (채팅용)
+      '/ws-stomp': {
+        target: 'https://cityless-lapsible-marianna.ngrok-free.dev',
+        changeOrigin: true,
+        secure: false,
+        ws: true // 웹소켓 연결 허용
+      }
+    }
+  },
   build: {
     outDir: targetPath,
     emptyOutDir: true,
