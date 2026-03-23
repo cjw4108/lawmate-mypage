@@ -2,7 +2,6 @@
   <div class="content">
     <div class="container-fluid">
       <div class="row">
-
         <!-- 총 답변 게시글 -->
         <div class="col-xl-3 col-md-6">
           <stats-card>
@@ -29,7 +28,9 @@
             </template>
             <template #content>
               <p class="card-category">오늘의 일정</p>
-              <h4 class="card-title">{{ todayEventCount > 0 ? `${todayEventCount}건 있음` : '없음' }}</h4>
+              <h4 class="card-title">
+                {{ todayEventCount > 0 ? `${todayEventCount}건 있음` : '없음' }}
+              </h4>
             </template>
             <template #footer><i class="fa fa-calendar-o"></i> 예약 관리 바로가기</template>
           </stats-card>
@@ -51,7 +52,9 @@
                 <span v-else>없음</span>
               </h4>
             </template>
-            <template #footer><i class="fa fa-clock-o"></i> 수락 대기 {{ unreadChatCount }}건</template>
+            <template #footer
+              ><i class="fa fa-clock-o"></i> 수락 대기 {{ unreadChatCount }}건</template
+            >
           </stats-card>
         </div>
 
@@ -70,7 +73,6 @@
             <template #footer><i class="fa fa-check"></i> 종료된 상담 누적</template>
           </stats-card>
         </div>
-
       </div>
 
       <div class="row">
@@ -84,43 +86,51 @@
             <div class="table-responsive">
               <table class="table table-hover table-striped">
                 <thead>
-                <tr>
-                  <th>의뢰인</th>
-                  <th>최근 메시지</th>
-                  <th class="text-right">상태</th>
-                </tr>
+                  <tr>
+                    <th>의뢰인</th>
+                    <th>최근 메시지</th>
+                    <th class="text-right">상태</th>
+                  </tr>
                 </thead>
                 <tbody>
-                <tr v-if="chatListData.length === 0">
-                  <td colspan="3" class="text-center text-muted" style="padding: 20px">
-                    현재 진행 중인 상담 요청이 없습니다.
-                  </td>
-                </tr>
-                <tr v-for="row in chatListData" :key="row.roomId">
-                  <td><strong>{{ row.userName }}</strong> 님</td>
-                  <td class="text-truncate" style="max-width: 200px">
-                    {{ row.lastMessage || '새로운 상담 요청입니다.' }}
-                  </td>
-                  <td class="text-right">
-                    <button
-                      v-if="row.status === 'LIVE'"
-                      @click="acceptConsultation(row.roomId)"
-                      class="btn btn-primary btn-fill btn-sm"
-                    >수락하기</button>
-                    <button
-                      v-else-if="row.status === 'ONGOING'"
-                      @click="goToChat(row)"
-                      class="btn btn-success btn-fill btn-sm"
-                    >입장하기</button>
-                    <button
-                      v-if="row.status === 'ONGOING'"
-                      @click="closeConsultation(row.roomId, row.lawyerId)"
-                      class="btn btn-danger btn-fill btn-sm"
-                    >상담 종료</button>
-                    <!-- ✅ 종료됨 폰트 검은색 -->
-                    <span v-if="row.status === 'CLOSED'" class="badge badge-closed">종료됨</span>
-                  </td>
-                </tr>
+                  <tr v-if="chatListData.length === 0">
+                    <td colspan="3" class="text-center text-muted" style="padding: 20px">
+                      현재 진행 중인 상담 요청이 없습니다.
+                    </td>
+                  </tr>
+                  <tr v-for="row in chatListData" :key="row.roomId">
+                    <td>
+                      <strong>{{ row.userName }}</strong> 님
+                    </td>
+                    <td class="text-truncate" style="max-width: 200px">
+                      {{ row.lastMessage || '새로운 상담 요청입니다.' }}
+                    </td>
+                    <td class="text-right">
+                      <button
+                        v-if="row.status === 'LIVE'"
+                        @click="acceptConsultation(row.roomId)"
+                        class="btn btn-primary btn-fill btn-sm"
+                      >
+                        수락하기
+                      </button>
+                      <button
+                        v-else-if="row.status === 'ONGOING'"
+                        @click="goToChat(row)"
+                        class="btn btn-success btn-fill btn-sm"
+                      >
+                        입장하기
+                      </button>
+                      <button
+                        v-if="row.status === 'ONGOING'"
+                        @click="closeConsultation(row.roomId, row.lawyerId)"
+                        class="btn btn-danger btn-fill btn-sm"
+                      >
+                        상담 종료
+                      </button>
+                      <!-- ✅ 종료됨 폰트 검은색 -->
+                      <span v-if="row.status === 'CLOSED'" class="badge badge-closed">종료됨</span>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -143,29 +153,37 @@
               </div>
               <table class="mini-cal-table">
                 <thead>
-                <tr>
-                  <th v-for="d in ['일','월','화','수','목','금','토']" :key="d">{{ d }}</th>
-                </tr>
+                  <tr>
+                    <th v-for="d in ['일', '월', '화', '수', '목', '금', '토']" :key="d">
+                      {{ d }}
+                    </th>
+                  </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(week, wi) in calendarWeeks" :key="wi">
-                  <td
-                    v-for="(day, di) in week"
-                    :key="di"
-                    :class="{
+                  <tr v-for="(week, wi) in calendarWeeks" :key="wi">
+                    <td
+                      v-for="(day, di) in week"
+                      :key="di"
+                      :class="{
                         today: day && isToday(day),
                         'has-event': day && hasEvent(day),
                         'other-month': !day,
                       }"
-                  >{{ day || '' }}</td>
-                </tr>
+                    >
+                      {{ day || '' }}
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
 
             <div class="upcoming-list">
               <h6 class="upcoming-title">가까운 일정</h6>
-              <div v-if="upcomingSchedules.length === 0" class="text-muted text-center" style="padding: 10px">
+              <div
+                v-if="upcomingSchedules.length === 0"
+                class="text-muted text-center"
+                style="padding: 10px"
+              >
                 예정된 일정이 없습니다.
               </div>
               <div
@@ -224,7 +242,10 @@ export default {
       let week = Array(firstDay).fill(null)
       for (let d = 1; d <= daysInMonth; d++) {
         week.push(d)
-        if (week.length === 7) { weeks.push(week); week = [] }
+        if (week.length === 7) {
+          weeks.push(week)
+          week = []
+        }
       }
       if (week.length > 0) {
         while (week.length < 7) week.push(null)
@@ -237,9 +258,10 @@ export default {
     upcomingSchedules() {
       const now = new Date()
       return this.scheduleList
-        .filter(ev => new Date(ev.startTime.replace(' ', 'T')) >= now)
-        .sort((a, b) =>
-          new Date(a.startTime.replace(' ', 'T')) - new Date(b.startTime.replace(' ', 'T'))
+        .filter((ev) => new Date(ev.startTime.replace(' ', 'T')) >= now)
+        .sort(
+          (a, b) =>
+            new Date(a.startTime.replace(' ', 'T')) - new Date(b.startTime.replace(' ', 'T')),
         )
         .slice(0, 5)
     },
@@ -247,25 +269,25 @@ export default {
     // ✅ 오늘 중 현재 시간 이후 일정 수
     todayEventCount() {
       const now = new Date()
-      return this.scheduleList.filter(ev => {
+      return this.scheduleList.filter((ev) => {
         const d = new Date(ev.startTime.replace(' ', 'T'))
         return (
           d.getDate() === now.getDate() &&
           d.getMonth() === now.getMonth() &&
           d.getFullYear() === now.getFullYear() &&
-          d >= now  // ✅ 현재 시간 이후만
+          d >= now // ✅ 현재 시간 이후만
         )
       }).length
     },
 
     // ✅ 진행 중인 채팅
     ongoingChatCount() {
-      return this.chatListData.filter(r => r.status === 'ONGOING').length
+      return this.chatListData.filter((r) => r.status === 'ONGOING').length
     },
 
     // ✅ 종료된 상담 수
     closedChatCount() {
-      return this.chatListData.filter(r => r.status === 'CLOSED').length
+      return this.chatListData.filter((r) => r.status === 'CLOSED').length
     },
   },
 
@@ -279,7 +301,7 @@ export default {
       try {
         const response = await axios.get('/api/chat/list')
         this.chatListData = response.data
-        this.unreadChatCount = response.data.filter(r => r.status === 'LIVE').length
+        this.unreadChatCount = response.data.filter((r) => r.status === 'LIVE').length
       } catch (error) {
         console.error('목록 로드 중 에러:', error)
       }
@@ -295,31 +317,43 @@ export default {
     },
 
     prevMonth() {
-      if (this.currentMonth === 0) { this.currentMonth = 11; this.currentYear-- }
-      else this.currentMonth--
+      if (this.currentMonth === 0) {
+        this.currentMonth = 11
+        this.currentYear--
+      } else this.currentMonth--
     },
 
     nextMonth() {
-      if (this.currentMonth === 11) { this.currentMonth = 0; this.currentYear++ }
-      else this.currentMonth++
+      if (this.currentMonth === 11) {
+        this.currentMonth = 0
+        this.currentYear++
+      } else this.currentMonth++
     },
 
     isToday(day) {
       const today = new Date()
-      return day === today.getDate() && this.currentMonth === today.getMonth() && this.currentYear === today.getFullYear()
+      return (
+        day === today.getDate() &&
+        this.currentMonth === today.getMonth() &&
+        this.currentYear === today.getFullYear()
+      )
     },
 
     hasEvent(day) {
-      return this.scheduleList.some(ev => {
+      return this.scheduleList.some((ev) => {
         const d = new Date(ev.startTime.replace(' ', 'T'))
-        return d.getDate() === day && d.getMonth() === this.currentMonth && d.getFullYear() === this.currentYear
+        return (
+          d.getDate() === day &&
+          d.getMonth() === this.currentMonth &&
+          d.getFullYear() === this.currentYear
+        )
       })
     },
 
     formatDisplayDate(dateStr) {
       if (!dateStr) return ''
       const d = new Date(dateStr.replace(' ', 'T'))
-      return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`
+      return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
     },
 
     async acceptConsultation(roomId) {
@@ -337,7 +371,10 @@ export default {
     },
 
     goToChat(row) {
-      if (!row.roomId || !row.lawyerId) { alert('방 정보를 찾을 수 없습니다.'); return }
+      if (!row.roomId || !row.lawyerId) {
+        alert('방 정보를 찾을 수 없습니다.')
+        return
+      }
       location.href = `/direct/consult?lawyerId=${row.lawyerId}&roomId=${row.roomId}`
     },
 
@@ -368,18 +405,80 @@ export default {
   border-radius: 4px;
 }
 
-.mini-calendar { margin-bottom: 16px; }
-.calendar-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.calendar-title { font-weight: 600; font-size: 0.95rem; }
-.mini-cal-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.82rem; }
-.mini-cal-table th { color: #999; font-weight: 600; padding: 4px 0; }
-.mini-cal-table td { padding: 5px 0; cursor: default; border-radius: 50%; width: 28px; height: 28px; }
-.mini-cal-table td.today { background: #4f46e5; color: white; border-radius: 50%; font-weight: 700; }
-.mini-cal-table td.has-event { position: relative; }
-.mini-cal-table td.has-event::after { content: ''; display: block; width: 5px; height: 5px; background: #f96332; border-radius: 50%; margin: 0 auto; }
-.mini-cal-table td.other-month { color: #ccc; }
-.upcoming-title { font-weight: 600; color: #444; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
-.upcoming-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; margin-bottom: 6px; background: #f9f9f9; border-radius: 6px; }
-.upcoming-date { font-size: 0.78rem; color: #888; min-width: 60px; }
-.upcoming-info { font-size: 0.88rem; }
+.mini-calendar {
+  margin-bottom: 16px;
+}
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.calendar-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.mini-cal-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 0.82rem;
+}
+.mini-cal-table th {
+  color: #999;
+  font-weight: 600;
+  padding: 4px 0;
+}
+.mini-cal-table td {
+  padding: 5px 0;
+  cursor: default;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+}
+.mini-cal-table td.today {
+  background: #4f46e5;
+  color: white;
+  border-radius: 50%;
+  font-weight: 700;
+}
+.mini-cal-table td.has-event {
+  position: relative;
+}
+.mini-cal-table td.has-event::after {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 5px;
+  background: #f96332;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+.mini-cal-table td.other-month {
+  color: #ccc;
+}
+.upcoming-title {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+.upcoming-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+.upcoming-date {
+  font-size: 0.78rem;
+  color: #888;
+  min-width: 60px;
+}
+.upcoming-info {
+  font-size: 0.88rem;
+}
 </style>
