@@ -113,7 +113,7 @@ watch(
 
 onMounted(async () => {
   try {
-    const res = await axios.get('http://localhost:8080/api/schedule')
+    const res = await axios.get('/api/schedule')
     allSchedules.value = res.data
     calendarOptions.value.events = res.data.map(ev => ({
       id: ev.scheduleId,
@@ -141,7 +141,7 @@ const handleSave = async () => {
       endTime: formatForServer(scheduleData.end),
     }
 
-    const res = await axios.post('http://localhost:8080/api/schedule', body)
+    const res = await axios.post('/api/schedule', body)
     const newId = res.data?.scheduleId ?? Date.now()
 
     // 캘린더에 이벤트 추가
@@ -203,7 +203,7 @@ const handleUpdate = async () => {
       endTime: formatForServer(editData.end),
     }
 
-    await axios.put(`http://localhost:8080/api/schedule/${editData.scheduleId}`, body)
+    await axios.put(`/api/schedule/${editData.scheduleId}`, body)
 
     calendarOptions.value.events = calendarOptions.value.events.map(ev =>
       ev.id == editData.scheduleId
@@ -245,7 +245,7 @@ const handleUpdate = async () => {
 const handleDelete = async () => {
   if (!confirm('이 일정을 삭제하시겠습니까?')) return
   try {
-    await axios.delete(`http://localhost:8080/api/schedule/${selectedEvent.value.scheduleId}`)
+    await axios.delete(`/api/schedule/${selectedEvent.value.scheduleId}`)
 
     calendarOptions.value.events = calendarOptions.value.events.filter(
       ev => ev.id != selectedEvent.value.scheduleId
