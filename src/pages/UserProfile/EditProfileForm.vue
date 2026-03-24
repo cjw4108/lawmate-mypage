@@ -1,7 +1,6 @@
 <template>
   <div class="profile-page">
     <div class="form-card">
-
       <!-- 카드 헤더 -->
       <div class="card-header-block">
         <h2 class="profile-title">내 정보 관리</h2>
@@ -14,7 +13,6 @@
       <div v-if="loading" class="loading-state">불러오는 중...</div>
 
       <template v-else>
-
         <!-- 섹션: 기본 정보 -->
         <div class="section-block">
           <div class="section-label">기본 정보</div>
@@ -29,11 +27,21 @@
             </div>
             <div class="field-item">
               <label class="field-label">이메일</label>
-              <input class="field-input" type="email" placeholder="example@email.com" v-model="user.email" />
+              <input
+                class="field-input"
+                type="email"
+                placeholder="example@email.com"
+                v-model="user.email"
+              />
             </div>
             <div class="field-item">
               <label class="field-label">전화번호</label>
-              <input class="field-input" type="text" placeholder="010-0000-0000" v-model="user.phone" />
+              <input
+                class="field-input"
+                type="text"
+                placeholder="010-0000-0000"
+                v-model="user.phone"
+              />
             </div>
           </div>
         </div>
@@ -42,15 +50,27 @@
 
         <!-- 섹션: 비밀번호 변경 -->
         <div class="section-block">
-          <div class="section-label">비밀번호 변경 <span class="optional">선택사항 — 변경 시에만 입력</span></div>
+          <div class="section-label">
+            비밀번호 변경 <span class="optional">선택사항 — 변경 시에만 입력</span>
+          </div>
           <div class="fields-grid col2">
             <div class="field-item">
               <label class="field-label">새 비밀번호</label>
-              <input class="field-input" type="password" placeholder="새 비밀번호 입력" v-model="user.password" />
+              <input
+                class="field-input"
+                type="password"
+                placeholder="새 비밀번호 입력"
+                v-model="user.password"
+              />
             </div>
             <div class="field-item">
               <label class="field-label">비밀번호 확인</label>
-              <input class="field-input" type="password" placeholder="비밀번호 재입력" v-model="passwordConfirm" />
+              <input
+                class="field-input"
+                type="password"
+                placeholder="비밀번호 재입력"
+                v-model="passwordConfirm"
+              />
             </div>
           </div>
         </div>
@@ -63,11 +83,21 @@
             <div class="fields-grid col2">
               <div class="field-item">
                 <label class="field-label">전문 분야</label>
-                <input class="field-input" type="text" placeholder="예: 민사, 형사, 이혼" v-model="user.specialty" />
+                <input
+                  class="field-input"
+                  type="text"
+                  placeholder="예: 민사, 형사, 이혼"
+                  v-model="user.specialty"
+                />
               </div>
               <div class="field-item full">
                 <label class="field-label">소개</label>
-                <textarea class="field-textarea" placeholder="변호사 소개를 입력하세요" v-model="user.introduction" rows="4"></textarea>
+                <textarea
+                  class="field-textarea"
+                  placeholder="변호사 소개를 입력하세요"
+                  v-model="user.introduction"
+                  rows="4"
+                ></textarea>
               </div>
             </div>
           </div>
@@ -82,7 +112,6 @@
             {{ saving ? '저장 중...' : '정보 수정하기' }}
           </button>
         </div>
-
       </template>
     </div>
   </div>
@@ -117,16 +146,16 @@ onMounted(async () => {
   try {
     const res = await axios.get('/api/user/profile')
     const data = res.data
-    user.value.userId       = data.userId   || currentUser.userId
-    user.value.name         = data.name     || ''
-    user.value.email        = data.email    || ''
-    user.value.phone        = data.phone    || ''
-    user.value.specialty    = data.specialty    || ''
+    user.value.userId = data.userId || currentUser.userId
+    user.value.name = data.name || ''
+    user.value.email = data.email || ''
+    user.value.phone = data.phone || ''
+    user.value.specialty = data.specialty || ''
     user.value.introduction = data.introduction || ''
   } catch (e) {
     console.error('프로필 로드 실패:', e)
     user.value.userId = currentUser.userId
-    user.value.name   = currentUser.name
+    user.value.name = currentUser.name
   } finally {
     loading.value = false
   }
@@ -140,8 +169,9 @@ const updateProfile = async () => {
   }
   saving.value = true
   try {
-    const payload = { ...user.value }
+    const payload = { ...user.value, role: currentUser.role }
     if (!payload.password) delete payload.password
+    console.log('보내는 payload:', payload)
     await axios.put('/api/user/profile', payload)
     alert('정보가 수정되었습니다.')
     user.value.password = ''
@@ -158,7 +188,9 @@ const updateProfile = async () => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 .profile-page {
   font-family: 'Noto Sans KR', sans-serif;
@@ -226,8 +258,13 @@ const updateProfile = async () => {
 }
 
 /* 그리드 */
-.fields-grid { display: grid; gap: 1rem; }
-.fields-grid.col2 { grid-template-columns: 1fr 1fr; }
+.fields-grid {
+  display: grid;
+  gap: 1rem;
+}
+.fields-grid.col2 {
+  grid-template-columns: 1fr 1fr;
+}
 
 .field-item {
   display: flex;
@@ -235,7 +272,9 @@ const updateProfile = async () => {
   gap: 0.4rem;
 }
 
-.field-item.full { grid-column: 1 / -1; }
+.field-item.full {
+  grid-column: 1 / -1;
+}
 
 .field-label {
   font-size: 0.8rem;
@@ -253,13 +292,16 @@ const updateProfile = async () => {
   color: #111827;
   background: #fafafa;
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    background 0.15s;
 }
 
 .field-input:focus {
   border-color: #111827;
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(17,24,39,0.07);
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.07);
 }
 
 .field-input:disabled {
@@ -279,13 +321,15 @@ const updateProfile = async () => {
   outline: none;
   resize: vertical;
   line-height: 1.6;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
 .field-textarea:focus {
   border-color: #111827;
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(17,24,39,0.07);
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.07);
 }
 
 .error-msg {
@@ -315,12 +359,24 @@ const updateProfile = async () => {
   font-weight: 600;
   font-family: 'Noto Sans KR', sans-serif;
   cursor: pointer;
-  transition: background 0.15s, transform 0.12s;
+  transition:
+    background 0.15s,
+    transform 0.12s;
 }
 
-.btn-save:hover { background: #1f2937; transform: translateY(-1px); }
-.btn-save:active { background: #030712; transform: translateY(0); }
-.btn-save:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
+.btn-save:hover {
+  background: #1f2937;
+  transform: translateY(-1px);
+}
+.btn-save:active {
+  background: #030712;
+  transform: translateY(0);
+}
+.btn-save:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
 
 .loading-state {
   padding: 3rem;
@@ -330,7 +386,11 @@ const updateProfile = async () => {
 }
 
 @media (max-width: 640px) {
-  .section-block { padding: 1rem 1.25rem; }
-  .fields-grid.col2 { grid-template-columns: 1fr; }
+  .section-block {
+    padding: 1rem 1.25rem;
+  }
+  .fields-grid.col2 {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
